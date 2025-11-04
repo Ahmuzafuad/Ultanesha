@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Selamat Ulang Tahun, Sayang 💖</title>
+  <style>
+    :root{--bg:#f479aa;--card:#ffffff;--accent:#ff6b9a;--muted:#6b6b6b}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial;background:linear-gradient(120deg,var(--bg),#fff);color:#222}
+    .center{display:flex;align-items:center;justify-content:center}
+    header{min-height:100vh;display:grid;place-items:center;padding:2rem;position:relative;overflow:hidden}
+    .card{background:var(--card);max-width:920px;width:100%;border-radius:18px;box-shadow:0 8px 30px rgba(15,15,15,0.08);padding:32px;display:grid;grid-template-columns:1fr 360px;gap:24px}
+    .intro h1{margin:0;font-size:clamp(24px,4vw,36px);color:var(--accent)}
+    .intro p{color:var(--muted);line-height:1.5}
+    .btn{display:inline-block;margin-top:14px;padding:10px 16px;border-radius:12px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;box-shadow:0 6px 18px rgba(255,107,154,0.18)}
+    .photo {border-radius: 12px;display: flex;flex-direction: column;align-items: center; justify-content: center;background-color: #fff;padding: 8px;}
+    .photo img {width: 100%;height: auto;  object-fit: contain;border-radius: 10px;max-height: 380px;}
+    .small{font-size:14px;color:var(--muted);padding:12px}
+
+/* Typewriter */
+    .typewriter {font-family: 'Dancing Script', cursive;font-size: 22px;color: #222;}
+
+/* Galeri foto */
+    .gallery {margin-top: 14px;display: grid;grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));gap: 10px;justify-items: center;}
+
+/* Foto thumbnail */
+.thumb {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;            /* tetap persegi */
+  object-fit: contain;            /* biar tidak terpotong */
+  border-radius: 12px;
+  background-color: #f7f7f7;      /* latar lembut agar estetis */
+  padding: 2px;                   /* beri jarak agar tidak mepet tepi */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efek hover manis */
+.thumb:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+    /* slideshow full */
+    .slideshow{position:relative;margin-top:16px;border-radius:12px;overflow:hidden}
+    .slides{display:flex;transition:transform .6s ease}
+    .slide{min-width:100%;height:300px;object-fit:cover}
+    .controls{position:absolute;left:12px;right:12px;bottom:12px;display:flex;justify-content:space-between}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.6);margin:0 4px;display:inline-block}
+
+    /* message */
+    section.message{padding:40px 20px;max-width:920px;margin:20px auto;border-radius:14px;background:linear-gradient(180deg,#fff,#fff7f8);box-shadow:0 6px 20px rgba(15,15,15,0.04)}
+    .lyrics{font-size:16px;line-height:1.6}
+
+    /* surprise popup */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;padding:20px}
+    .modal{background:#fff;padding:24px;border-radius:12px;max-width:600px;width:100%;text-align:center}
+
+    /* responsive */
+    @media (max-width:880px){
+      .card{grid-template-columns:1fr;}
+      .photo img{height:180px}
+      .slide{height:220px}
+    }
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .center-col{display:flex;flex-direction:column;align-items:center}
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <div class="card">
+    <div class="intro">
+      <h1>Selamat Ulang Tahun, Sayang 💖</h1>
+      <p class="typewriter" id="typewriter">Aku buat ini khusus untukmu — penuh kenangan, tawa, dan janji-janji kecil. Klik tombol di samping untuk melihat kejutan.</p>
+      <a href="#" class="btn" id="openSurprise">Lihat Kejutan</a>
+
+      <div class="gallery" aria-hidden="true">
+        <img class="thumb" src="Foto 1.jpg" alt="thumb1">
+        <img class="thumb" src="Foto 2.jpg" alt="thumb2">
+        <img class="thumb" src="foto 7.jpg" alt="thumb4">
+      </div>
+    </div>
+
+    <div class="photo">
+      <img src="Foto bareng 1.jpg" alt="Foto berdua">
+      <div class="small muted"></div>
+      <div style="display:flex;gap:8px;padding:10px;align-items:center;justify-content:space-between">
+        <div class="muted"><strong>Kita usahakan rumah itu</strong></div>
+        <div>
+          <button id="playBtn" class="btn" style="background:#ffd1e0;color:#000;padding:8px 12px;border-radius:10px">Putar</button>
+        </div>
+      </div>
+      <audio id="myAudio" src="Sal_Priadi_-_Kita_usahakan_rumah_itu_(mp3.pm).mp3" preload="auto"></audio>
+    </div>
+  </div>
+
+  <!-- simple confetti canvas -->
+  <canvas id="confettiCanvas" style="position:absolute;inset:0;pointer-events:none"></canvas>
+</header>
+
+<section class="message">
+  <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+    <div style="flex:1;min-width:240px">
+      <h2>Surat untukmu</h2>
+      <p class="lyrics" id="letter">Hai Sayang,<br><br>
+      [semoga menjadi pribadi yang lebih dewasa,panjang umur , sehat dan bahagia selalu]
+      <br><br>Semoga hari ini seindah senyummu.</p>
+    </div>
+    <div style="width:320px;min-width:230px">
+      <div class="slideshow" id="slideshow">
+        <div class="slides" id="slides">
+          <img class="slide" src="foto 5.jpg" alt="slide1">
+          <img class="slide" src="Foto 4.jpg" alt="slide2">
+          <img class="slide" src="Foto 3.jpg" alt="slide3">
+        </div>
+        <div class="controls">
+          <div class="center-col">
+            <small class="muted">Swipe/klik untuk lihat</small>
+          </div>
+          <div id="dots"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;text-align:center">
+        <button id="prev" class="btn" style="background:#f2f2f2;color:#111;padding:8px 12px;border-radius:10px">Sebelumnya</button>
+        <button id="next" class="btn" style="background:#f2f2f2;color:#111;padding:8px 12px;border-radius:10px">Berikutnya</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- surprise modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2>Surprise! 🎉</h2>
+    <p class="muted">Terima kasih sudah jadi kamu. Klik tombol di bawah untuk hadiah spesial.</p>
+    <div style="margin-top:12px">
+  <a href="#" id="giftLink" class="btn">Buka Hadiah</a>
+  <p id="giftMessage" class="muted" style="margin-top:8px;font-size:14px;display:none;"></p>
+  <button id="closeModal" style="margin-left:8px;padding:8px 12px;border-radius:10px;border:1px solid #eee;background:transparent;cursor:pointer;">Tutup</button>
+  </div>
+  </div>
+</div>
+
+<script>
+// Typewriter effect
+(function(){
+  const el = document.getElementById('typewriter');
+  const text = el.textContent;
+  el.textContent='';
+  let i=0;
+  function type(){
+    if(i<text.length){ el.textContent += text.charAt(i); i++; setTimeout(type,26) }
+  }
+  setTimeout(type,400);
+})();
+
+// Simple confetti (particles)
+(function(){
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx = canvas.getContext('2d');
+  let W=canvas.width = innerWidth; let H=canvas.height = innerHeight; window.addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight});
+  const colors=['#ff6b9a','#ffd1e0','#fff176','#90caf9','#b39ddb'];
+  const pieces=[];
+  function addConfetti(){
+    for(let i=0;i<40;i++) pieces.push({x:Math.random()*W,y:Math.random()*-H/2,w:8+Math.random()*10,h:8+Math.random()*10,color:colors[Math.floor(Math.random()*colors.length)],r:Math.random()*360,vy:1+Math.random()*4,vr:Math.random()*6-3});
+  }
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    for(let p of pieces){
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r*Math.PI/180);
+      ctx.fillStyle=p.color;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();p.y+=p.vy;p.r+=p.vr; if(p.y>H+50) p.y=-50;}
+    requestAnimationFrame(render);
+  }
+  addConfetti();render();
+})();
+
+// Slideshow
+(function(){
+  const slidesEl = document.getElementById('slides');
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  let idx=0;
+  function update(){ slidesEl.style.transform = `translateX(${-idx*100}%)`; dotsEl.innerHTML=''; for(let i=0;i<slides.length;i++){const d=document.createElement('span');d.className='dot'; if(i===idx){d.style.background='white'} dotsEl.appendChild(d)} }
+  document.getElementById('next').addEventListener('click',()=>{ idx=(idx+1)%slides.length; update(); });
+  document.getElementById('prev').addEventListener('click',()=>{ idx=(idx-1+slides.length)%slides.length; update(); });
+  update();
+})();
+
+// Modal
+const overlay = document.getElementById('overlay');
+document.getElementById('openSurprise').addEventListener('click', (e)=>{ e.preventDefault(); overlay.style.display='flex'; });
+document.getElementById('closeModal').addEventListener('click', ()=> overlay.style.display='none');
+document.getElementById('giftLink').addEventListener('click', function(e) {
+  e.preventDefault(); const msg = document.getElementById('giftMessage');
+  msg.textContent = "Hehehe... Hadiahmu adalah........ satu canda tawa dan seribu senyum dariku 😜💖";
+  msg.style.color = '#ff6b9a';
+  msg.style.display = 'block';
+});
+
+// Play audio (placeholder, user can replace src)
+(function(){ 
+  // 1. Ambil elemen <audio> dari HTML menggunakan ID-nya
+  const audio = document.getElementById('myAudio'); 
+
+  // Pastikan ID 'myAudio' ada di tag <audio> HTML Anda, misalnya:
+  // <audio id="myAudio" src="Sal_Priadi_-_Kita_usahakan_rumah_itu_(mp3.pm).mp3"></audio>
+
+  // 2. Terapkan loop (jika diperlukan)
+  audio.loop = true; 
+
+  // 3. Hubungkan logika play/pause ke tombol
+  document.getElementById('playBtn').addEventListener('click', () => { 
+    if(audio.paused){ 
+      audio.play(); 
+      document.getElementById('playBtn').textContent = 'Jeda' 
+    } else { 
+      audio.pause(); 
+      document.getElementById('playBtn').textContent = 'Putar' 
+    } 
+  });
+})();
+</script>
+</body>
+</html>
